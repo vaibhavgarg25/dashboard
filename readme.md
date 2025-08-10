@@ -10,9 +10,20 @@
 
 - Node.js v16 or higher
 - npm or yarn
-- PostgreSQL (or supported database) for Prisma
+- MongoDB (or supported database) for Prisma
 
 ## Setup Instructions
+
+### Frontend
+```bash
+cd client
+npm install
+# or
+yarn install
+
+# Start the React development server
+npm run dev
+```
 
 ### Backend
 
