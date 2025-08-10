@@ -332,7 +332,7 @@ export default function Page() {
                         if (effectiveRole === "ADMIN") return true;
 
                         // TEACHER sees only teachers
-                        if (effectiveRole === "TEACHER") return u.role === "TEACHER";
+                        if (effectiveRole === "TEACHER") return u.role === "STUDENT";
 
                         // STUDENT sees only students
                         if (effectiveRole === "STUDENT") return u.role === "STUDENT";
