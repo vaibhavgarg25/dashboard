@@ -20,7 +20,7 @@ export default function Page() {
   const viewerRole = user?.role || "STUDENT"
 
   const [search, setSearch] = useState("")
-  const [role, setRole] = useState<Role | "ALL">("ALL") // Only used by Admin
+  const [role, setRole] = useState<Role | "ALL">("") // Only used by Admin
   const [dateRange, setDateRange] = useState<DateRangeValue>({
     from: new Date(new Date().setDate(new Date().getDate() - 6)),
     to: new Date(),
@@ -324,18 +324,29 @@ export default function Page() {
                   <TableBody>
                     {(data?.users || [])
                       .filter((u) => {
-                        if(role == "ALL") return true;
-                        if (role === "ADMIN") return true;           // All users
-                        if (role === "TEACHER") return u.role === "TEACHER";
-                        if (role === "STUDENT") return u.role === "STUDENT";
-                        return false; // default deny
+                        const effectiveRole = role === "" ? viewerRole : role;
+
+                        if (effectiveRole === "ALL") return true;
+
+                        // ADMIN sees everyone
+                        if (effectiveRole === "ADMIN") return true;
+
+                        // TEACHER sees only teachers
+                        if (effectiveRole === "TEACHER") return u.role === "TEACHER";
+
+                        // STUDENT sees only students
+                        if (effectiveRole === "STUDENT") return u.role === "STUDENT";
+
+                        return false;
                       })
                       .map((u) => (
                         <TableRow key={u.id}>
                           <TableCell className="font-medium">{u.name}</TableCell>
                           <TableCell>{u.email}</TableCell>
                           <TableCell>
-                            <span className="rounded-full px-2 py-0.5 text-xs border">{u.role}</span>
+                            <span className="rounded-full px-2 py-0.5 text-xs border">
+                              {u.role}
+                            </span>
                           </TableCell>
                           <TableCell className="text-right">
                             {new Date(Number(u.createdAt)).toLocaleDateString("en-GB")}

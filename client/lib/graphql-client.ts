@@ -2,7 +2,8 @@
 
 import { GraphQLClient, gql } from "graphql-request"
 
-export type Role = "ADMIN" | "TEACHER" | "STUDENT"
+export type Role = "ADMIN" | "TEACHER" | "STUDENT" | "ALL" | "";
+
 
 export type User = {
   id: string
@@ -200,7 +201,10 @@ export async function fetchDashboard(params: { token?: string; filters?: Dashboa
     if (!ENDPOINT) {
       const { generateMockDashboard } = await import("../lib/mock-data")
       await new Promise((r) => setTimeout(r, 400))
-      return generateMockDashboard(params.filters)
+      return generateMockDashboard({
+        ...params.filters,
+        role: params.filters?.role === "" ? undefined : params.filters?.role,
+      });
     }
     const c = getGraphQLClient(params.token)
     if (!c) throw new Error("GraphQL client not initialized")
